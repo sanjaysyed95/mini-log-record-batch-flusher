@@ -47,3 +47,10 @@ The package exports one name:
 ## Edge case to know about
 
 The time limit is only checked when a record arrives or when `flush()` is called. If the application goes quiet with records still buffered, they stay buffered until the next log call or an explicit `drain()`. This is the deliberate cost of not running a background timer thread.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
